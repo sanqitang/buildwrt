@@ -1,12 +1,9 @@
-# Actions-OpenWrt  
-🚀 推荐本人[➦自用稳定机场](https://moo.pet/VHTm7),新用户限时专属8折优惠码来了:binbin666.返佣是我持续编译的最大动力.本仓库永久每天早上会编译出最新固件。    
+## 特别声明 
 
-注：本仓库纯属个人根据自己的设备配置使用，直接FORK本仓库是不能自动编译并发布release的，请看下面使用方法。
+本仓库纯属个人根据自己的设备配置使用，直接FORK本仓库是不能自动编译并发布release的，请看下面使用方法。
 
 ## 使用方法
 
-前面的自动编译以及个性化定制等修改，全部来源于P3TER大神的[代码](https://github.com/P3TERX/Actions-OpenWrt)及[教程](https://p3terx.com/archives/build-openwrt-with-github-actions.html)。</br>
-这里只说发布release的方法，部分代码借鉴或使用[id77](https://github.com/id77/OpenWrt-K2P-firmware)和[ncipollo](https://github.com/ncipollo/release-action)两位大神：</br>
  1、自动编译及自动发布你也可以使用本仓库模板，请点击上面的Use this template(使用此模板）来创建你自己的新仓库。</br>
  2、点击右上角你的头像-settings-Developer settings-Personal access tokens生成新的令牌，选中public_repo，随便起名保存，同时复制令牌内容。</br>
  3、回到刚建的新仓库，settings-Secrets-Add a new secret(添加密匙），取名RELEASES_TOKEN,把刚才复制的令牌粘贴进去保存。</br>
@@ -16,7 +13,7 @@
  找不到令牌而宣告失败。或者取消微信推送，注释掉yml文件中开始编译和编译结束的代码（共四行代码）即可。</br>
  
 ## 致谢
-
+- [binge8] (https://github.com/binge8/op)
 - [P3TERX](https://github.com/P3TERX/Actions-OpenWrt)   
 - [id77](https://github.com/id77/OpenWrt-K2P-firmware)
 - [Microsoft](https://www.microsoft.com)

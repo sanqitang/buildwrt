@@ -112,7 +112,7 @@ jobs:
       id: organize
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
-      #  echo "${{ env.useVersionInfo }}" > openwrt/bin/targets/x86/64/${{ env.DATE }}更新说明.md
+        echo "${{ env.useVersionInfo }}" > openwrt/bin/targets/x86/64/${{ env.DATE }}更新说明.md
         rm -rf openwrt/bin/targets/x86/64/packages
         tar -zcvf bin.tar.gz openwrt/bin/targets/x86/64
         cp bin.tar.gz ./openwrt/bin/targets/x86/64/bin.tar.gz

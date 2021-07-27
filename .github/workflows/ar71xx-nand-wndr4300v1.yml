@@ -1,4 +1,4 @@
-name: x64精简版
+name: ar71xx
 
 on:
   repository_dispatch:

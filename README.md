@@ -13,7 +13,7 @@
  找不到令牌而宣告失败。或者取消微信推送，注释掉yml文件中开始编译和编译结束的代码（共四行代码）即可。</br>
  
 ## 致谢
-- [binge8] (https://github.com/binge8/op)
+- [binge8](https://github.com/binge8/op)
 - [P3TERX](https://github.com/P3TERX/Actions-OpenWrt)   
 - [id77](https://github.com/id77/OpenWrt-K2P-firmware)
 - [Microsoft](https://www.microsoft.com)

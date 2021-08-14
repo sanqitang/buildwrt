@@ -13,8 +13,8 @@ on:
   #  - cron: 00 16 * * *
 
 env:
-  REPO_URL: https://github.com/openwrt/openwrt
-  REPO_BRANCH: openwrt-19.07
+  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_BRANCH: master
   CONFIG_FILE: kirkwood.config
   DIY_SH: bin.sh
   UPLOAD_BIN_DIR: true
@@ -61,8 +61,7 @@ jobs:
         cd openwrt
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-        useVersionInfo=$(git show -s --d885405
-    #   ate=short --format="编译前的最后一次[➦主源码](https://github.com/coolsnowwolf/lede)更新记录:<br/>更新人: %an<br/>更新时间: %cd<br/>更新内容: %s<br/>哈希值: %H")
+        useVersionInfo=$(git show -s --date=short --format="编译前的最后一次[➦主源码](https://github.com/coolsnowwolf/lede)更新记录:<br/>更新人: %an<br/>更新时间: %cd<br/>更新内容: %s<br/>哈希值: %H")
         echo "useVersionInfo=$useVersionInfo" >> $GITHUB_ENV
         echo "DATE=$(date "+%Y年%m月%d日%H时%M分")" >> $GITHUB_ENV
         echo "DATE1=$(date "+%Y.%m.%d")" >> $GITHUB_ENV
@@ -74,16 +73,16 @@ jobs:
         chmod +x $DIY_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_SH
-    # sed -i 's/OpenWrt/Bin AutoBuild ${{ env.DATE1 }} @ OpenWrt/g' package/lean/default-settings/files/zzz-default-settings
-    # sed -i '/lede/ { s/downloads/https\:\/\/downloads/g }' package/lean/default-settings/files/zzz-default-settings
-    # sed -i '/lede/ { s/mirrors/https\:\/\/mirrors/g }' package/lean/default-settings/files/zzz-default-settings
-    # sed -i '/lede/ { s/org/org\/snapshots/g }' package/lean/default-settings/files/zzz-default-settings
-    # sed -i '/openwrt_luci/ { s/sed/# sed/g; }'  package/lean/default-settings/files/zzz-default-settings
+        sed -i 's/OpenWrt/Bin AutoBuild ${{ env.DATE1 }} @ OpenWrt/g' package/lean/default-settings/files/zzz-default-settings
+        sed -i '/lede/ { s/downloads/https\:\/\/downloads/g }' package/lean/default-settings/files/zzz-default-settings
+        sed -i '/lede/ { s/mirrors/https\:\/\/mirrors/g }' package/lean/default-settings/files/zzz-default-settings
+        sed -i '/lede/ { s/org/org\/snapshots/g }' package/lean/default-settings/files/zzz-default-settings
+        sed -i '/openwrt_luci/ { s/sed/# sed/g; }'  package/lean/default-settings/files/zzz-default-settings
     # sed -i 's#https://mirrors.cloud.tencent.com/lede#http://256pd.top:9666/懒人版/bin#g' package/lean/default-settings/files/zzz-default-settings
 
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
-      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'sshkirmwood')
+      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'sshkirkwood')
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -113,13 +112,13 @@ jobs:
       id: organize
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
-        echo "${{ env.useVersionInfo }}" > openwrt/bin/targets/kirkwood/generic/${{ env.DATE }}更新说明.md
-        rm -rf openwrt/bin/targets/kirkwood/generic/packages
-        tar -zcvf bin.tar.gz openwrt/bin/targets/kirkwood/generic
-        cp bin.tar.gz ./openwrt/bin/targets/kirkwood/generic/bin.tar.gz
+        echo "${{ env.useVersionInfo }}" > openwrt/bin/targets/kirkwood/nand/${{ env.DATE }}更新说明.md
+        rm -rf openwrt/bin/targets/kirkwood/nand/packages
+        tar -zcvf bin.tar.gz openwrt/bin/targets/kirkwood/nand
+        cp bin.tar.gz ./openwrt/bin/targets/kirkwood/nand/bin.tar.gz
         cd openwrt/bin/targets/*/*
         rm -rf *.md
-        # bzip2 *.img
+        bzip2 *.img
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
 
@@ -127,14 +126,14 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled()
       with:
-        name: OpenWrt-kirmwood
-        path: openwrt/bin/targets/kirkwood/generic/bin.tar.gz
+        name: OpenWrt-kirkwood
+        path: openwrt/bin/targets/kirkwood/nand/bin.tar.gz
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
       if: env.UPLOAD_FIRMWARE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: kirmwood
+        name: kirkwood
         path: ${{ env.FIRMWARE }}
 
     - name: Create release
@@ -143,7 +142,7 @@ jobs:
       with:
         name: ${{ env.DATE }} 🚀 kirkwood | Auto compile
         allowUpdates: true
-        tag: kirmwood
+        tag: kirkwood
         commit: master
         token: ${{ secrets.RELEASES_TOKEN }}
         body: |

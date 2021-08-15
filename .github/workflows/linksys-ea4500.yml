@@ -8,18 +8,18 @@ on:
       ssh:
         description: 'kirkwood'
         required: false
-        default: 'false'
+        default: 'true'
   #schedule:
   #  - cron: 00 16 * * *
 
 env:
-  REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: master
+  REPO_URL: https://github.com/openwrt/openwrt
+  REPO_BRANCH: openwrt-19.07
   CONFIG_FILE: kirkwood.config
   DIY_SH: bin.sh
   UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: false
-  UPLOAD_RELEASE: true
+  UPLOAD_RELEASE: false
   UPLOAD_WETRANSFER: false
   UPLOAD_COWTRANSFER: false
   TZ: Asia/Shanghai
@@ -61,10 +61,10 @@ jobs:
         cd openwrt
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-        useVersionInfo=$(git show -s --date=short --format="编译前的最后一次[➦主源码](https://github.com/coolsnowwolf/lede)更新记录:<br/>更新人: %an<br/>更新时间: %cd<br/>更新内容: %s<br/>哈希值: %H")
-        echo "useVersionInfo=$useVersionInfo" >> $GITHUB_ENV
-        echo "DATE=$(date "+%Y年%m月%d日%H时%M分")" >> $GITHUB_ENV
-        echo "DATE1=$(date "+%Y.%m.%d")" >> $GITHUB_ENV
+      #  useVersionInfo=$(git show -s --date=short --format="编译前的最后一次[➦主源码](https://github.com/coolsnowwolf/lede)更新记录:<br/>更新人: %an<br/>更新时间: %cd<br/>更新内容: %s<br/>哈希值: %H")
+      #  echo "useVersionInfo=$useVersionInfo" >> $GITHUB_ENV
+      #  echo "DATE=$(date "+%Y年%m月%d日%H时%M分")" >> $GITHUB_ENV
+      #  echo "DATE1=$(date "+%Y.%m.%d")" >> $GITHUB_ENV
 
     - name: Load custom configuration
       run: |
@@ -73,7 +73,7 @@ jobs:
         chmod +x $DIY_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_SH
-        sed -i 's/OpenWrt/Bin AutoBuild ${{ env.DATE1 }} @ OpenWrt/g' package/lean/default-settings/files/zzz-default-settings
+      #  sed -i 's/OpenWrt/Bin AutoBuild ${{ env.DATE1 }} @ OpenWrt/g' package/lean/default-settings/files/zzz-default-settings
         sed -i '/lede/ { s/downloads/https\:\/\/downloads/g }' package/lean/default-settings/files/zzz-default-settings
         sed -i '/lede/ { s/mirrors/https\:\/\/mirrors/g }' package/lean/default-settings/files/zzz-default-settings
         sed -i '/lede/ { s/org/org\/snapshots/g }' package/lean/default-settings/files/zzz-default-settings
@@ -112,10 +112,10 @@ jobs:
       id: organize
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
-        echo "${{ env.useVersionInfo }}" > openwrt/bin/targets/kirkwood/nand/${{ env.DATE }}更新说明.md
-        rm -rf openwrt/bin/targets/kirkwood/nand/packages
-        tar -zcvf bin.tar.gz openwrt/bin/targets/kirkwood/nand
-        cp bin.tar.gz ./openwrt/bin/targets/kirkwood/nand/bin.tar.gz
+#        echo "${{ env.useVersionInfo }}" > openwrt/bin/targets/kirkwood/generic/${{ env.DATE }}更新说明.md
+        rm -rf openwrt/bin/targets/kirkwood/generic/packages
+        tar -zcvf bin.tar.gz openwrt/bin/targets/kirkwood/eneric
+        cp bin.tar.gz ./openwrt/bin/targets/kirkwood/generic/bin.tar.gz
         cd openwrt/bin/targets/*/*
         rm -rf *.md
         bzip2 *.img
@@ -127,7 +127,7 @@ jobs:
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled()
       with:
         name: OpenWrt-kirkwood
-        path: openwrt/bin/targets/kirkwood/nand/bin.tar.gz
+        path: openwrt/bin/targets/kirkwood/generic/bin.tar.gz
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@main

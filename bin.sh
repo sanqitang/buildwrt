@@ -6,7 +6,7 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/M
 #修改主机名
 sed -i 's/OpenWrt/Sanqitang/g' package/base-files/files/bin/config_generate
 #关闭自建私有源签名验证
-sed -i '90d' package/system/opkg/Makefile
+#sed -i '90d' package/system/opkg/Makefile
 
 #添加额外软件包
 git clone https://github.com/xiaorouji/openwrt-passwall.git package/openwrt-packages/luci-app-passwall

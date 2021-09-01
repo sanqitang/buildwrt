@@ -1,4 +1,4 @@
-name: x64精简版
+name: x64-1st
 
 on:
   repository_dispatch:
@@ -98,6 +98,20 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
+    - name: Log in to Docker Hub
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}   
+      
+    - name: Build from dockerfile
+      run: |
+        docker build \
+          --cache-from $CACHE_IMAGE:latest \
+          --tag $CACHE_IMAGE:latest \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
+          "."
+
     - name: Compile the firmware
       id: compile
       run: |
@@ -105,12 +119,7 @@ jobs:
         echo -e "$(($(nproc) + 1)) thread compile"
         make -j$(($(nproc) + 1)) || make -j$(($(nproc) + 1)) || make -j1 V=s
         echo "::set-output name=status::success"
-
-    - name: Log in to Docker Hub
-      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}   
+  
       
     - name: Build from dockerfile
       run: |

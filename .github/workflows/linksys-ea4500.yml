@@ -13,8 +13,8 @@ on:
   #  - cron: 00 16 * * *
 
 env:
-  REPO_URL: https://github.com/openwrt/openwrt
-  REPO_BRANCH: openwrt-19.07
+  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_BRANCH: master
   CONFIG_FILE: kirkwood.config
   DIY_SH: bin.sh
   UPLOAD_BIN_DIR: true

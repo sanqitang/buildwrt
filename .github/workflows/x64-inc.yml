@@ -75,8 +75,8 @@ jobs:
         context: .
         push: true
         tags: user/app:latest
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache-new      
+        cache-from: type=registry,ref=user/app:buildcache
+        cache-to: type=registry,ref=user/app:buildcache,mode=max   
 
     - name: Clone source code # 克隆源代码
       id: source

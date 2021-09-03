@@ -6,7 +6,7 @@ RUN apt-get update && \
     apt-get clean
 
 # set working directory
-WORKDIR ~/openwrt
+WORKDIR /workdir
 
 # add app
 COPY . .

@@ -79,7 +79,7 @@ jobs:
 #        cache-to: type=registry,ref=user/app:buildcache,mode=max          
         push: true
         tags: $CACHE_IMAGE:latest
-        cache-from: type=registry,ref=$CACHE_IMAGE:latest
+        cache-from: type=registry,ref=sanqitang/x64-1st-cache:latest
         cache-to: type=inline     
 
 
